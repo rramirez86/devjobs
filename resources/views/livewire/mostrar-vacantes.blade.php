@@ -23,35 +23,46 @@
         @endforelse ($vacantes as $vacante)
     </div>
 
-    <div class="justify-center mt-10">
-        {{ $vacantes->links() }}
-    </div>
+    @if ($vacantes)
+        <div class="justify-center mt-10">
+            {{ $vacantes->links() }}
+        </div>
+    @endif
+
 </div>
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        Livewire.on('mostrarAlerta', vacanteId => {
-            Swal.fire({
-                title: 'Eliminar Vacante?',
-                text: "Una vacente eliminada no se puede recuperar!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    //Eliminar la Vacante
-                    Livewire.emit('eliminarVacante', {{ $vacante->id }});
-                    Swal.fire(
-                        'Se ha elminado la vacante!',
-                        'Eliminada Correctamente.',
-                        'success'
-                    )
-                }
-            })
+        @php
+            if ($vacante) {
+        @endphp
+        document.addEventListener("DOMContentLoaded", function(event) {
+            Livewire.on('mostrarAlerta', vacanteId => {
+                Swal.fire({
+                    title: 'Eliminar Vacante?',
+                    text: "Una vacente eliminada no se puede recuperar!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        //Eliminar la Vacante
+                        Livewire.emit('eliminarVacante', {{ $vacante->id }});
+                        Swal.fire(
+                            'Se ha elminado la vacante!',
+                            'Eliminada Correctamente.',
+                            'success'
+                        )
+                    }
+                })
+            });
         });
+        @php
+            }
+        @endphp
     </script>
 @endpush
